@@ -4,7 +4,10 @@ kind: Kustomization
 namespace: ghost
 
 resources:
-  - argocd-application.yaml
+  - mysql-deployment.yaml
+  - ghost-deployment.yaml
+  - ghost-service.yaml
+  - ghost-ingress.yaml
   - ghost-sealed-secrets.yaml
 
 commonLabels:
