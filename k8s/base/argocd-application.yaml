@@ -1,0 +1,91 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ghost
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: ghost
+    targetRevision: 20.1.3
+    helm:
+      releaseName: ghost
+      parameters:
+        - name: ghostHost
+          value: blog.shadyknollcave.io
+        - name: ghostUsername
+          value: admin
+        # Password and email should be set via sealed secrets
+        - name: mysql.enabled
+          value: "true"
+        - name: mysql.auth.rootPassword
+          value: "changeme"  # Replace with sealed secret
+        - name: mysql.auth.database
+          value: "ghost"
+        - name: mysql.auth.username
+          value: "ghost"
+        - name: mysql.auth.password
+          value: "changeme"  # Replace with sealed secret
+        - name: mysql.primary.persistence.enabled
+          value: "true"
+        - name: mysql.primary.persistence.storageClass
+          value: "local-path"
+        - name: mysql.primary.persistence.size
+          value: "10Gi"
+        - name: persistence.enabled
+          value: "true"
+        - name: persistence.storageClass
+          value: "local-path"
+        - name: persistence.size
+          value: "20Gi"
+        - name: service.type
+          value: "ClusterIP"
+        - name: ingress.enabled
+          value: "true"
+        - name: ingress.className
+          value: "traefik"
+        - name: ingress.hostname
+          value: blog.shadyknollcave.io
+        - name: ingress.annotations.cert-manager.io/cluster-issuer
+          value: letsencrypt-prod
+        - name: ingress.tls
+          value: "true"
+        - name: resources.limits.cpu
+          value: "1000m"
+        - name: resources.limits.memory
+          value: "1Gi"
+        - name: resources.requests.cpu
+          value: "500m"
+        - name: resources.requests.memory
+          value: "512Mi"
+        - name: livenessProbe.enabled
+          value: "true"
+        - name: livenessProbe.initialDelaySeconds
+          value: "120"
+        - name: readinessProbe.enabled
+          value: "true"
+        - name: readinessProbe.initialDelaySeconds
+          value: "30"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ghost
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

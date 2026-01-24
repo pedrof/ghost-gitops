@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ghost-prod
+  namespace: argocd
+spec:
+  destination:
+    namespace: ghost-prod
+  source:
+    helm:
+      parameters:
+        # Production hostname
+        - name: ghostHost
+          value: blog.shadyknollcave.io
+        - name: ingress.hostname
+          value: blog.shadyknollcave.io
+        # Higher resource limits for production
+        - name: resources.limits.cpu
+          value: "2000m"
+        - name: resources.limits.memory
+          value: "2Gi"
+        - name: resources.requests.cpu
+          value: "1000m"
+        - name: resources.requests.memory
+          value: "1Gi"
+        # Larger storage for production
+        - name: persistence.size
+          value: "50Gi"
+        - name: mysql.primary.persistence.size
+          value: "20Gi"

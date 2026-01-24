@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ghost-dev
+  namespace: argocd
+spec:
+  destination:
+    namespace: ghost-dev
+  source:
+    helm:
+      parameters:
+        # Override hostname for dev environment
+        - name: ghostHost
+          value: dev-blog.shadyknollcave.io
+        - name: ingress.hostname
+          value: dev-blog.shadyknollcave.io
+        # Lower resource limits for dev
+        - name: resources.limits.cpu
+          value: "500m"
+        - name: resources.limits.memory
+          value: "512Mi"
+        - name: resources.requests.cpu
+          value: "250m"
+        - name: resources.requests.memory
+          value: "256Mi"
