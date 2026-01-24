@@ -10,6 +10,8 @@
 *.sealed-secrets.backup
 **/secrets/*.yaml
 !**/secrets/*.example.yaml
+ghost-secrets.yaml
+!ghost-sealed-secrets.yaml
 
 # Environment files
 .env

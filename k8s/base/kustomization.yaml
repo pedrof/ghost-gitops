@@ -5,6 +5,7 @@ namespace: ghost
 
 resources:
   - argocd-application.yaml
+  - ghost-sealed-secrets.yaml
 
 commonLabels:
   app.kubernetes.io/name: ghost

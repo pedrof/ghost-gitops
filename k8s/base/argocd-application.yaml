@@ -8,17 +8,64 @@ metadata:
 spec:
   project: default
 
-  sources:
-    - repoURL: https://charts.bitnami.com/bitnami
-      chart: ghost
-      targetRevision: 25.0.4
-      helm:
-        releaseName: ghost
-        valueFiles:
-          - $values/k8s/base/helm-values.yaml
-    - repoURL: https://git.shadyknollcave.io/micro/ghost-gitops.git
-      targetRevision: main
-      ref: values
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: ghost
+    targetRevision: 25.0.4
+    helm:
+      releaseName: ghost
+      values: |
+        ghostHost: blog.shadyknollcave.io
+        ghostUsername: admin
+        existingSecret: ghost-config
+        image:
+          registry: docker.io
+          repository: bitnami/ghost
+          tag: 6.0.5-debian-12-r0
+        mysql:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: bitnami/mysql
+            tag: 9.4.0-debian-12-r1
+          auth:
+            rootPassword: ""
+            database: ghost
+            username: ghost
+            password: ""
+            existingSecret: ghost-config
+          primary:
+            persistence:
+              enabled: true
+              storageClass: local-path
+              size: 10Gi
+        persistence:
+          enabled: true
+          storageClass: local-path
+          size: 20Gi
+        service:
+          type: ClusterIP
+        ingress:
+          enabled: true
+          className: cilium
+          hostname: blog.shadyknollcave.io
+          tls: true
+          selfSigned: false
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-prod
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          enabled: true
+          initialDelaySeconds: 120
+        readinessProbe:
+          enabled: true
+          initialDelaySeconds: 30
 
   destination:
     server: https://kubernetes.default.svc
