@@ -14,6 +14,11 @@ spec:
           value: blog.shadyknollcave.io
         - name: ingress.hostname
           value: blog.shadyknollcave.io
+        # Production-specific TLS configuration
+        - name: ingress.extraTls[0].hosts[0]
+          value: blog.shadyknollcave.io
+        - name: ingress.extraTls[0].secretName
+          value: ghost-prod-tls-cert
         # Higher resource limits for production
         - name: resources.limits.cpu
           value: "2000m"

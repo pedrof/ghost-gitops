@@ -47,13 +47,21 @@ spec:
         - name: ingress.enabled
           value: "true"
         - name: ingress.className
-          value: "traefik"
+          value: "cilium"
         - name: ingress.hostname
           value: blog.shadyknollcave.io
         - name: ingress.annotations.cert-manager.io/cluster-issuer
           value: letsencrypt-prod
+        - name: ingress.annotations.cilium.io/ingress-class
+          value: "cilium"
+        - name: ingress.annotations.cilium.io/service-type
+          value: "LoadBalancer"
         - name: ingress.tls
           value: "true"
+        - name: ingress.extraTls[0].hosts[0]
+          value: blog.shadyknollcave.io
+        - name: ingress.extraTls[0].secretName
+          value: ghost-tls-cert
         - name: resources.limits.cpu
           value: "1000m"
         - name: resources.limits.memory

@@ -28,8 +28,8 @@ This repository contains ArgoCD Application manifests and Kustomize configuratio
 - **Automated Deployment**: ArgoCD syncs changes from this repository to the cluster
 - **Helm Chart**: Uses official Bitnami Ghost Helm chart
 - **MySQL Backend**: Includes MySQL database for persistent storage
-- **TLS/SSL**: Automated certificate management via cert-manager
-- **Ingress**: Traefik ingress controller for external access
+- **TLS/SSL**: Automated certificate management via cert-manager with Let's Encrypt
+- **Ingress**: Cilium ingress controller for external access and load balancing
 - **Multi-Environment**: Support for dev and production environments
 - **Resource Management**: Configurable CPU and memory limits
 - **Persistent Storage**: Local-path storage for Ghost content and database
@@ -47,7 +47,7 @@ This repository contains ArgoCD Application manifests and Kustomize configuratio
 ### Cluster Requirements
 
 - **Kubernetes**: K3s cluster running
-- **Ingress Controller**: Traefik installed and configured
+- **Ingress Controller**: Cilium installed and configured with ingress support
 - **Certificate Manager**: cert-manager installed with Let's Encrypt issuer
 - **Storage**: local-path storage class available
 - **ArgoCD**: Installed and accessible
@@ -82,7 +82,7 @@ This repository contains ArgoCD Application manifests and Kustomize configuratio
          │                        │
          │                        ▼
          │                ┌──────────────┐
-         │                │   Traefik    │
+         │                │   Cilium     │
          │                │  (Ingress)   │
          │                └──────────────┘
          │                        │
@@ -97,7 +97,7 @@ This repository contains ArgoCD Application manifests and Kustomize configuratio
 
 - **Ghost**: Node.js blogging platform
 - **MySQL**: Relational database for Ghost content
-- **Traefik**: Ingress controller for routing
+- **Cilium**: eBPF-based networking, security, and ingress controller
 - **cert-manager**: Automatic TLS certificate management
 - **ArgoCD**: Continuous deployment and GitOps operator
 - **Local-Path**: K3s storage provisioner
@@ -160,8 +160,12 @@ The Helm values are configured in `k8s/base/argocd-application.yaml`. Key settin
 ghostHost: blog.shadyknollcave.io
 ingress:
   enabled: true
-  className: traefik
+  className: cilium
   hostname: blog.shadyknollcave.io
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    cilium.io/ingress-class: cilium
+    cilium.io/service-type: LoadBalancer
 persistence:
   enabled: true
   storageClass: local-path
@@ -305,8 +309,11 @@ make logs-mysql
 # Check ingress configuration
 kubectl describe ingress -n ghost
 
-# Verify Traefik is running
-kubectl get pods -n kube-system -l app.kubernetes.io/name=traefik
+# Verify Cilium is running
+kubectl get pods -n kube-system -l app.kubernetes.io/name=cilium-agent
+
+# Check Cilium ingress status
+cilium status
 ```
 
 **Certificate issues:**
@@ -459,4 +466,5 @@ For issues and questions:
 - [Bitnami Ghost Helm Chart](https://github.com/bitnami/charts/tree/main/bitnami/ghost)
 - [ArgoCD Documentation](https://argoproj.github.io/argo-cd/)
 - [K3s Documentation](https://docs.k3s.io/)
+- [Cilium Documentation](https://docs.cilium.io/)
 - [cert-manager Documentation](https://cert-manager.io/docs/)
