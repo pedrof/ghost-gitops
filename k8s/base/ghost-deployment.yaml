@@ -58,19 +58,15 @@ spec:
         - name: http
           containerPort: 2368
         livenessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 2368
-            scheme: HTTP
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
         readinessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: 2368
-            scheme: HTTP
           initialDelaySeconds: 30
           periodSeconds: 5
           timeoutSeconds: 3
