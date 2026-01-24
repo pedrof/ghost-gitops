@@ -1,0 +1,59 @@
+# Ghost Configuration
+ghostHost: blog.shadyknollcave.io
+ghostUsername: admin
+# ghostPassword: Set via sealed secret
+# ghostEmail: Set via sealed secret
+
+# MySQL Configuration
+mysql:
+  enabled: true
+  auth:
+    rootPassword: "changeme"  # Replace with sealed secret
+    database: "ghost"
+    username: "ghost"
+    password: "changeme"  # Replace with sealed secret
+  primary:
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      size: 10Gi
+
+# Persistence
+persistence:
+  enabled: true
+  storageClass: "local-path"
+  size: 20Gi
+
+# Service Configuration
+service:
+  type: ClusterIP
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  className: "cilium"
+  hostname: "blog.shadyknollcave.io"
+  tls: true
+  selfSigned: false
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cilium.io/ingress-class: "cilium"
+    cilium.io/service-type: "LoadBalancer"
+
+# Resource Limits
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+# Probes
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 120
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
