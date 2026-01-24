@@ -71,16 +71,30 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
+        startupProbe:
+          tcpSocket:
+            port: 2368
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
         volumeMounts:
         - name: ghost-content
           mountPath: /var/lib/ghost/content
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - node
+              - -e
+              - "process.emit('SIGTERM')"
         resources:
           requests:
-            cpu: 250m
-            memory: 256Mi
-          limits:
             cpu: 500m
             memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
       volumes:
       - name: ghost-content
         persistentVolumeClaim:
