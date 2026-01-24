@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: docker.io/bitnami/mysql:9.4.0-debian-12-r1
+        image: docker.io/library/mysql:9.0
         imagePullPolicy: IfNotPresent
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -44,9 +44,13 @@ spec:
         livenessProbe:
           exec:
             command:
-            - /bin/bash
-            - -c
-            - "mysqladmin ping -u${MYSQL_USER} -p${MYSQL_PASSWORD}"
+            - mysqladmin
+            - ping
+            - -h
+            - localhost
+            - -u
+            - root
+            - -p${MYSQL_ROOT_PASSWORD}
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
@@ -54,16 +58,20 @@ spec:
         readinessProbe:
           exec:
             command:
-            - /bin/bash
-            - -c
-            - "mysqladmin ping -u${MYSQL_USER} -p${MYSQL_PASSWORD}"
+            - mysqladmin
+            - ping
+            - -h
+            - localhost
+            - -u
+            - root
+            - -p${MYSQL_ROOT_PASSWORD}
           initialDelaySeconds: 10
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
         volumeMounts:
         - name: mysql-data
-          mountPath: /bitnami/mysql/data
+          mountPath: /var/lib/mysql
         resources:
           requests:
             cpu: 250m
