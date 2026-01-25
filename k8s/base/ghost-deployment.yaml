@@ -54,6 +54,30 @@ spec:
             secretKeyRef:
               name: ghost-config
               key: ghost-email
+        # Mail configuration
+        - name: mail__transport
+          value: "SMTP"
+        - name: mail__options__host
+          valueFrom:
+            secretKeyRef:
+              name: ghost-config
+              key: mail-host
+        - name: mail__options__port
+          value: "587"
+        - name: mail__options__secure
+          value: "true"
+        - name: mail__options__auth__user
+          valueFrom:
+            secretKeyRef:
+              name: ghost-config
+              key: mail-user
+        - name: mail__options__auth__pass
+          valueFrom:
+            secretKeyRef:
+              name: ghost-config
+              key: mail-password
+        - name: mail__from
+          value: "noreply@shadyknollcave.io"
         ports:
         - name: http
           containerPort: 2368
