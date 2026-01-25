@@ -65,7 +65,7 @@ spec:
         - name: mail__options__port
           value: "587"
         - name: mail__options__secure
-          value: "true"
+          value: "false"
         - name: mail__options__auth__user
           valueFrom:
             secretKeyRef:
