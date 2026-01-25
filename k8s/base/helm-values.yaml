@@ -49,6 +49,19 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+# Mail Configuration
+mail:
+  enabled: true
+  fromAddress: "noreply@shadyknollcave.io"
+  transport: SMTP
+  options:
+    host: smtp.example.com  # Override with secret: mail-host
+    port: 587
+    secure: true
+    auth:
+      user: your-smtp-username  # Override with secret: mail-user
+      pass: your-smtp-password  # Override with secret: mail-password
+
 # Probes
 livenessProbe:
   enabled: true
