@@ -69,15 +69,20 @@ secrets-create: ## Create sealed secrets for sensitive values
 	@echo "Creating sealed secrets..."
 	@echo "Make sure you have kubeseal configured and the sealed-secret controller is running"
 	@if [ -f .env.local ]; then \
-		source .env.local; \
-		kubectl create secret generic ghost-config \
-			--from-literal=ghost-password=$$GHOST_PASSWORD \
-			--from-literal=ghost-email=$$GHOST_EMAIL \
-			--from-literal=mysql-root-password=$$MYSQL_ROOT_PASSWORD \
-			--from-literal=mysql-password=$$MYSQL_PASSWORD \
-			--namespace=ghost \
-			--dry-run=client -o yaml | \
-			kubeseal --format yaml > k8s/base/ghost-sealed-secrets.yaml; \
+		bash -c 'source .env.local && \
+			kubectl create secret generic ghost-config \
+				--from-literal=ghost-password=$$GHOST_PASSWORD \
+				--from-literal=ghost-email=$$GHOST_EMAIL \
+				--from-literal=mysql-username=$$MYSQL_USERNAME \
+				--from-literal=mysql-password=$$MYSQL_PASSWORD \
+				--from-literal=mysql-database=$$MYSQL_DATABASE \
+				--from-literal=mysql-root-password=$$MYSQL_ROOT_PASSWORD \
+				--from-literal=mail-user=$$MAIL_USER \
+				--from-literal=mail-password=$$MAIL_PASSWORD \
+				--from-literal=mail-host=$$MAIL_HOST \
+				--namespace=ghost \
+				--dry-run=client -o yaml | \
+			kubeseal --format yaml > k8s/base/ghost-sealed-secrets.yaml'; \
 		echo "Sealed secrets created at k8s/base/ghost-sealed-secrets.yaml"; \
 	else \
 		echo "ERROR: .env.local file not found. Copy .env.template to .env.local and fill in the values."; \
