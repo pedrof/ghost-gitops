@@ -9,10 +9,10 @@ spec:
   ingressClassName: cilium
   tls:
   - hosts:
-    - blog.shadyknollcave.io
+    - www.thehardproblem.ai
     secretName: ghost-tls
   rules:
-  - host: blog.shadyknollcave.io
+  - host: www.thehardproblem.ai
     http:
       paths:
       - path: /

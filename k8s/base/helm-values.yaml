@@ -1,5 +1,5 @@
 # Ghost Configuration
-ghostHost: blog.shadyknollcave.io
+ghostHost: www.thehardproblem.ai
 ghostUsername: admin
 # ghostPassword: Set via sealed secret
 # ghostEmail: Set via sealed secret
@@ -32,7 +32,7 @@ service:
 ingress:
   enabled: true
   className: "cilium"
-  hostname: "blog.shadyknollcave.io"
+  hostname: "www.thehardproblem.ai"
   tls: true
   selfSigned: false
   annotations:
@@ -52,7 +52,7 @@ resources:
 # Mail Configuration
 mail:
   enabled: true
-  fromAddress: "noreply@shadyknollcave.io"
+  fromAddress: "noreply@thehardproblem.ai"
   transport: SMTP
   options:
     host: smtp.example.com  # Override with secret: mail-host
