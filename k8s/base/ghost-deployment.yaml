@@ -19,7 +19,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: url
-          value: "https://blog.shadyknollcave.io"
+          value: "https://www.thehardproblem.ai"
         - name: database__client
           value: "mysql"
         - name: database__connection__host
@@ -77,7 +77,7 @@ spec:
               name: ghost-config
               key: mail-password
         - name: mail__from
-          value: "noreply@shadyknollcave.io"
+          value: "noreply@thehardproblem.ai"
         ports:
         - name: http
           containerPort: 2368
