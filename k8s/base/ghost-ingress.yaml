@@ -9,9 +9,20 @@ spec:
   ingressClassName: cilium
   tls:
   - hosts:
+    - thehardproblem.ai
     - www.thehardproblem.ai
     secretName: ghost-tls
   rules:
+  - host: thehardproblem.ai
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ghost
+            port:
+              number: 80
   - host: www.thehardproblem.ai
     http:
       paths:

@@ -14,8 +14,15 @@ spec:
           value: www.thehardproblem.ai
         - name: ingress.hostname
           value: www.thehardproblem.ai
-        # Production-specific TLS configuration
+        # Add apex domain as extra host
+        - name: ingress.extraHosts[0].name
+          value: thehardproblem.ai
+        - name: ingress.extraHosts[0].path
+          value: /
+        # Production-specific TLS configuration (both domains)
         - name: ingress.extraTls[0].hosts[0]
+          value: thehardproblem.ai
+        - name: ingress.extraTls[0].hosts[1]
           value: www.thehardproblem.ai
         - name: ingress.extraTls[0].secretName
           value: ghost-prod-tls-cert

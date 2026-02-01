@@ -33,8 +33,16 @@ ingress:
   enabled: true
   className: "cilium"
   hostname: "www.thehardproblem.ai"
+  extraHosts:
+    - name: "thehardproblem.ai"
+      path: /
   tls: true
   selfSigned: false
+  extraTls:
+    - hosts:
+        - "thehardproblem.ai"
+        - "www.thehardproblem.ai"
+      secretName: ghost-tls
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     cilium.io/ingress-class: "cilium"
